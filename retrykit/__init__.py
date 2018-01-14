@@ -1,8 +1,9 @@
 __author__ = 'Sho Yoshida'
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 __license__ = 'MIT'
 
 import time
+from functools import wraps
 
 
 class retry:
@@ -12,6 +13,16 @@ class retry:
         self.backoff = backoff
         self.exc = exc
         self.errors = None
+
+    def __call__(self, func):
+
+        @wraps(func)
+        def _wrap(*args, **kwargs):
+            for ctx in self.trial():
+                with ctx:
+                    return func(*args, **kwargs)
+
+        return _wrap
 
     def __enter__(self):
         return self

@@ -32,3 +32,15 @@ for ctx in retry(exc=ValueError, tries=3, backoff=2).trial():
         # retries 3 times at most, only when ValueError occurs
         do_your_operation()
 ```
+
+Also support decorator style.
+
+```py
+from retrykit import retry
+
+
+@retry(exc=ValueError)
+def my_operation():
+  pass
+
+```
